@@ -1,4 +1,4 @@
-# SnakeNN Daniel Krywult 1TR2 23.05.2023 - Trenowanie Sieci Neuronowej do gry Snake
+# SnakeNN Daniel Krywult - Trenowanie Sieci Neuronowej do gry Snake
 Discord - danihek#6538
 
 // --------------------------- Tytul
