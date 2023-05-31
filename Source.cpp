@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "Board.h"
 
-int SCREEN_WIDTH = 1200;
+int SCREEN_WIDTH = 1600;
 int SCREEN_HEIGHT = 1000;
 
 int blockSize = 30;
@@ -18,12 +18,12 @@ int main()
 {
 	int cols=30;
 	int rows=30;
-	std::cout << "screen width: \n"; std::cin >> SCREEN_WIDTH;
-	std::cout << "screen height: \n"; std::cin >> SCREEN_HEIGHT;
-	std::cout << "screen blockSize(px): \n"; std::cin >> blockSize;
-	
-	std::cout << "screen rows: \n"; std::cin >> rows;
-	std::cout << "screen cols: \n"; std::cin >> cols;
+	//std::cout << "screen width: \n"; std::cin >> SCREEN_WIDTH;
+	//std::cout << "screen height: \n"; std::cin >> SCREEN_HEIGHT;
+	//std::cout << "screen blockSize(px): \n"; std::cin >> blockSize;
+	//
+	//std::cout << "screen rows: \n"; std::cin >> rows;
+	//std::cout << "screen cols: \n"; std::cin >> cols;
 
 	std::cout << "player or ai? (0-1): \n"; std::cin >> isAiplaying;
 	if (isAiplaying)
@@ -120,6 +120,10 @@ int main()
 				{
 					board.showInput();
 				}
+				if (event.key.code == sf::Keyboard::Y)
+				{
+					board.showBrain();
+				}
 			}
 		}
 
@@ -130,10 +134,11 @@ int main()
 			{
 				lasttime = clock.getElapsedTime().asMilliseconds();
 
-				board.Update(slowUpdate);
+				board.Update(slowUpdate, drawing);
 
 				window.clear();
-				board.draw(&window, stateOfnumberthingstodraw);
+				if (drawing)
+					board.draw(&window, stateOfnumberthingstodraw);
 				window.display();
 			}
 		}
@@ -141,7 +146,7 @@ int main()
 		{
 			if (isAiplaying)
 			{
-				board.Update(slowUpdate);
+				board.Update(slowUpdate, drawing);
 
 				window.clear();
 				if (drawing)
