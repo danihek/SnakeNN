@@ -22,13 +22,13 @@ float generateRandomFloat(float min, float max)
 	return dis(gen);
 }
 
-void swap(float& a, float& b) {
-	float temp = a;
+void swap(double& a, double& b) {
+	double temp = a;
 	a = b;
 	b = temp;
 }
 
-int partition(std::vector<float>& arr, int low, int high) {
+int partition(std::vector<double>& arr, int low, int high) {
 	float pivot = arr[high];
 	int i = low - 1;
 
@@ -43,7 +43,7 @@ int partition(std::vector<float>& arr, int low, int high) {
 	return i + 1;
 }
 
-void quickSort(std::vector<float>& arr, int low, int high) {
+void quickSort(std::vector<double>& arr, int low, int high) {
 	if (low < high) {
 		int pivotIndex = partition(arr, low, high);
 		quickSort(arr, low, pivotIndex - 1);
@@ -672,28 +672,31 @@ public:
 	}
 
 private:
-	std::vector<double> weights;
 	double fitness=0;
 	double score=0;
+
+	float mutationAmount = 0;
+	float mutationChance = 0;
+	
+	int rows;
+	int cols;
 	int moves = 0;
 	int movesLeftAmountHolder = 50;
 	int movesLeftAmount = 50;
 	int movesLeft = movesLeftAmount;
+
 	bool mutateMutations = true;
 	bool isAi;
 	bool showInputVarS = false;
-
-	std::vector<Net> nn;
-	float mutationAmount = 0;
-	float mutationChance = 0;
-	int rows;
-	int cols;
+	bool isAlive = true;
 
 	sf::Color color;
-	bool isAlive = true;
+	
+	std::vector<Net> nn;
 	std::vector<Apple> apples;
 	std::vector<sf::Vector2i> segment;
 	std::vector<sf::Vector2i> lastPositions;
 	std::vector<sf::Vector2i> lastPositionsForExecute;
+	
 	sf::Vector2i vel;
 };
