@@ -62,10 +62,10 @@ druga czesc to najlepszy wynik konkretnego modelu  = "27040000" - im wyzszy wyni
 Po wlaczeniu aplikacji trzeba wpisac parametry startowe
 
 // zalecane dla trenowania
-screenwidth  - 800
-screenheight - 800
+screenwidth  - 1200
+screenheight - 1000
 
-screen blockSize(px) - 16
+screen blockSize(px) - 30
 
 screen rows - 30
 screen cols - 30
@@ -74,11 +74,13 @@ player or ai? - 1
 Population size - 500
 trained model - 0
 
-// --------------------------- Przykladowe do odczytania juz wytrenowanego modelu
-screenwidth  - 800
-screenheight - 800
+// --------------------------- Przykladowe do odczytania juz wytrenowanego modelu 
+Aby wczytac wytrenowany model nalezy UPEWNIC SIE ze jest w folderze /models
 
-screen blockSize(px) - 16
+screenwidth  - 1200
+screenheight - 1000
+
+screen blockSize(px) - 30
 
 screen rows - 30
 screen cols - 30
@@ -94,12 +96,13 @@ model filename - "modelname" - aktualnie najlepszy znajduje sie w folderze "mode
 [przycisk na klawiaturze] - funkcja
 
 [SPACE] - szybka symulacja / wolna symulacja
-	[0] i [9] - sterowanie szybkoscia symulacji (tylko gdy jest wolna) - jezeli ![SPACE]
-	[Q] - wylacza rysowanie tylko gdy jest WOLNA symulacja(by przyspieszyc proces trenowania - jezeli [SPACE]
+	[0] i [9] - sterowanie szybkoscia symulacji
+	[Q] - wylacza rysowanie
 	
 [R] - rysowanie wszystkich/jednego najlepszego snake
 	[U] - wyswietlenie inputu i outputu najlepszego snake w konsoli - tylko jezeli [R]
 [T] - rysowanie raycastow on/off
+[Y] - wizualizacja sieci neuronowej
 
 //Jezeli zostal wybrany tryb gracza, a nie AI - strzalki do sterowania
 
