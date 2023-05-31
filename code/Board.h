@@ -345,7 +345,7 @@ public:
 							{
 								if (female.size() > 0)
 								{
-									SpawnSpecificSnake(male.at(0)); // - working
+									SpawnSpecificSnake(male.at(0)); // - working (idk Its sometimes workings, sometimes not ://
 									//SpawnSpecificSnake(male.at(0).MixNetworks(female.at(0)));
 								}
 								else
