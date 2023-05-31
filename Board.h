@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <ctime>
 #include <random>
+#include <string>
 #include "Snake.h"
 //#include "Apple.h"
 //#include "NeuralNetwork.h"
@@ -178,7 +179,7 @@ public:
 		//readNet(&male.at(0),filename);
 	}
 
-	void Update(bool slowUpdate)
+	void Update(bool slowUpdate, bool drawing)
 	{
 		if (nbOfSnakesAlive() > 0)
 		{
@@ -194,7 +195,7 @@ public:
 					}
 				}
 			}
-			if (!___stateOfNumbers)
+			if (!___stateOfNumbers && drawing)
 				snakes.at(tempIndexforInput).turnInputOutputShowUp(showInputVar);
 
 			for (int snak = 0; snak < snakes.size(); snak++)
@@ -364,41 +365,9 @@ public:
 							if (bestNetwork.size() > 0)
 								SpawnSpecificSnake(bestNetwork.at(0));
 							SpawnSnake();
-							//if (male.size() > 0)//male.size() > 0)
-							//{
-							//	if (female.size() > 0)
-							//	{
-							//		SpawnSpecificSnake(female.at(0).MixNetworks(male.at(0)));
-							//	}
-							//	else
-							//	{
-							//		SpawnSpecificSnake(male.at(0));
-							//	}
-							//}
-							//else
-							//{
-							//	//std::cout << "XD?!" << std::endl;
-							//	SpawnSnake();
-							//}
+							
 						}
 					}
-					//if (snak % 2 == 0)
-					//{
-					//	if (male.size() > 0)
-					//		SpawnSpecificSnake(male.at(0));
-					//	else
-					//		SpawnSnake();
-					//}
-					//else
-					//{
-					//	//SpawnSnake();
-					//	if (female.size() > 0)
-					//		SpawnSpecificSnake(female.at(0));
-					//	else if (male.size() > 0)
-					//		SpawnSpecificSnake(male.at(0));
-					//	else
-					//		SpawnSnake();
-					//}
 					for (int snak = 0; snak < 10; snak++)
 					{
 						SpawnSnake();
@@ -420,22 +389,12 @@ public:
 						+ std::to_string(int(FitnessPerGen)));
 				}
 				
-				
-				/*if (male.size() > 0)
-					SaveNet(&male.at(0), "male-"+std::to_string(generation)+ std::to_string(int(lastBestFitness)));
-				else if (female.size() > 0)
-					SaveNet(&female.at(0), "female-" + std::to_string(generation) + std::to_string(int(lastBestFitness)));
-					*/
-
-
 				generation++;
 				std::cout << "Generation: " << generation << " | Current Best Score: " << lastBestFitness << 
 					" | Highest Score: " << FitnessPerGen <<std::endl;
 				counterOfGenerations++;
 				lastBestFitness = 0.0f;
 				lastHighestIndex = 0;
-
-				//system("pause");
 
 			}
 			else
@@ -488,6 +447,133 @@ public:
 			apples.erase(apples.begin() + er);
 	}
 
+	void drawNet(sf::RenderWindow* window, int id)
+	{
+		//int gridX = SCREEN_WIDTH / 2 - (rows * blockSize) / 2;
+		sf::Text txt("ID: " + std::to_string(id),font,35);
+
+		int gridY = SCREEN_HEIGHT / 4;
+		int gridX = SCREEN_WIDTH - (SCREEN_WIDTH / 3) - (rows * blockSize) / 2;
+
+		Net dNet = snakes.at(id).getNN();
+
+		float radiusC = 10.f;
+		float xDist = 50; int xFac = 175;
+		float yDist = 0; int yFac = 50;
+
+		float maxY = 0;	float minX = xDist-radiusC*2;
+		float maxX = gridX;	float minY = 1000;
+		sf::Color circColor = sf::Color::Blue;
+		sf::Color circBColor = sf::Color::Yellow;
+		
+		sf::CircleShape circ(radiusC);
+		circ.setFillColor(sf::Color::Blue);
+		circ.setOrigin(circ.getRadius(), circ.getRadius());
+		circ.setOutlineColor(sf::Color::White);
+		circ.setOutlineThickness(circ.getRadius() / 10);
+
+		sf::RectangleShape bg;
+
+		std::vector<std::vector<sf::Vector2f>> handler;
+		std::vector<double> results;
+		
+		dNet.getResult(results);
+		unsigned IndexRes = 0;
+
+		for (unsigned i = 0; i < results.size()-1; i++)
+		{
+			if (results.at(i) < results.at(i + 1))
+			{
+				IndexRes = i;
+			}
+		}
+
+
+		for (unsigned i = 0; i < dNet.m_layers.size(); i++)
+		{
+			std::vector<sf::Vector2f> t;
+			handler.push_back(t);
+			for (unsigned j = 0; j < dNet.m_layers.at(i).size()-1; j++)
+			{
+				handler.at(i).push_back(sf::Vector2f(xDist, gridY - dNet.m_layers.at(i).size() * radiusC + yDist));
+
+				yDist += yFac;
+				if (maxY < yDist)
+					maxY = yDist;
+
+				if (minY > yDist)
+					minY = yDist;
+			}
+			if (i + 1 < dNet.m_layers.size())
+			{
+				yDist = ((dNet.m_layers.size()+1)*radiusC+ (dNet.m_layers.size() + 1) * yFac)/2;
+				xDist += xFac;
+			}
+			if (maxX < xDist)
+				maxX = xDist;
+		}
+
+		bg.setSize(sf::Vector2f(xDist,maxY));
+		bg.setPosition(sf::Vector2f(minX, minY));
+		bg.setOutlineColor(sf::Color::Black);
+		bg.setOutlineThickness(2);
+		bg.setFillColor(sf::Color(112, 113, 115));
+		window->draw(bg);
+
+		txt.setCharacterSize(30);
+		txt.setStyle(sf::Text::Bold);
+		float idPlacement = txt.findCharacterPos(txt.getString().getSize() - 1).x - txt.findCharacterPos(0).x;
+		txt.setPosition(maxX-50-idPlacement, minY + txt.getCharacterSize() - 5);
+		txt.setFillColor(sf::Color(16, 17, 20));
+		window->draw(txt);
+
+
+		for (unsigned i = 0; i < handler.size(); i++)
+		{
+			for (unsigned j = 0; j < handler.at(i).size(); j++)
+			{
+				if(i < handler.size()-1)
+				{
+					for (unsigned we = 0; we < handler.at(i + 1).size(); we++)
+					{
+						int n = dNet.m_layers.at(i).at(j).getWeightByID(we)*255;
+
+						sf::Vertex line[] =
+						{
+							//sf::Vertex(handler.at(i).at(j),sf::Color(n,n,100)),
+							//sf::Vertex(handler.at(i + 1).at(we),sf::Color(100,n,n))
+							sf::Vertex(handler.at(i).at(j),sf::Color(n,n/2,n/2)),
+							sf::Vertex(handler.at(i + 1).at(we),sf::Color(255,n,n))
+						};
+						window->draw(line, 2, sf::Lines);
+					}
+
+				}
+				circ.setPosition(handler.at(i).at(j));
+				
+				int c = std::abs((dNet.m_layers.at(i).at(j).getOutputVal()+.5) * 127.5);
+
+				circ.setFillColor(sf::Color(c,c,c));
+				
+				if (i == handler.size() - 1 && j == IndexRes)
+				{
+					/*circ.setOutlineColor(sf::Color(222, 255, 36));
+					circ.setOutlineThickness(circ.getRadius() / 2);*/
+					window->draw(circ);
+
+					circ.setOutlineColor(sf::Color::White);
+					circ.setOutlineThickness(circ.getRadius() / 10);
+				}
+				else
+				{
+					window->draw(circ);
+				}
+			}
+		}
+	}
+
+
+
 	void SpawnSnake()
 	{
 		//int ar[] = { 4, 2 ,4 };
@@ -520,10 +606,24 @@ public:
 		//snakes.back().MutateCreature();
 	}
 
+	void showBrain()
+	{
+		if (brainShowin)
+			brainShowin = false;
+		else
+			brainShowin = true;
+	}
+
 	void draw(sf::RenderWindow* window, bool stateofNumbers)
 	{
 		___stateOfNumbers = stateofNumbers;
-		int gridX = SCREEN_WIDTH / 2 - (rows * blockSize) / 2;
+		int gridX;
+
+		if (brainShowin)
+			gridX = SCREEN_WIDTH - (SCREEN_WIDTH / 3) - (rows * blockSize) / 2;
+		else
+			gridX = SCREEN_WIDTH / 2 - (rows * blockSize) / 2;
+		
 		int gridY = SCREEN_HEIGHT / 2 - (cols * blockSize) / 2;
 
 		int tempIndex = 0;
@@ -730,6 +830,9 @@ public:
 			appleShape.setFillColor(sf::Color(238, 114, 114));
 			window->draw(appleShape);
 		}
+
+		if (brainShowin)
+			drawNet(window,tempIndex);
 	}
 
 	bool checkFitness(double f)
@@ -748,22 +851,20 @@ public:
 private:
 	double FitnessPerGen = 0;
 	double lastBestFitness = 0;
-	std::vector<Snake> bestPerGen;
-	//std::vector<Net> male;
-	std::vector<Net> female;
-	std::vector<Net> bestNetwork;
-	std::vector<Net> loadedModel;
-	int lastHighestIndex = 0;
 
 	std::string currentModelFilename="";
 
 	sf::Font font;
+
 	bool isAi;
 	bool preTrainedModels;
 	bool evolveOrShowModel;
 	bool raycastState=false;
 	bool showInputVar = false;
 	bool ___stateOfNumbers = false;
+	bool brainShowin = false;
+
+	int lastHighestIndex = 0;
 	int generation = 0;
 	int counterOfGenerations = 0;
 	int rows;
@@ -771,6 +872,11 @@ private:
 	int SCREEN_WIDTH;
 	int SCREEN_HEIGHT;
 	int blockSize;
+
+	std::vector<Snake> bestPerGen;
+	std::vector<Net> female;
+	std::vector<Net> bestNetwork;
+	std::vector<Net> loadedModel;
 	std::vector<Snake> snakes;
 	std::vector<Apple> apples;
 	//std::vector<NeuralNetwork> net;
