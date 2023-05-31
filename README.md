@@ -1,4 +1,4 @@
-# SnakeNN Daniel Krywult - Trenowanie Sieci Neuronowej do gry Snake
+# SnakeNN - Trenowanie Sieci Neuronowej do gry Snake
 Discord - danihek#6538
 
 // --------------------------- Tytul
