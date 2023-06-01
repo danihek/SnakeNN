@@ -317,12 +317,12 @@ public:
 								{
 									if (male.size() > 0)
 									{
-										SpawnSpecificSnake(male.at(0));
+										LoadSpawnSpecificSnake(loadedModel.at(0)); 
 									}
 									else
 									{
-										//std::cout << "XD?!" << std::endl;
-										SpawnSnake();
+										SpawnSpecificSnake(male.at(0));
+										//SpawnSnake();
 									}
 								}
 								else
@@ -337,43 +337,64 @@ public:
 				}
 				else
 				{
+					int ctnn = 0;
 					for (int snak = 0; snak < SNAKESFACTOR; snak++)
 					{
-						if (snak % 2 == 0)
+						ctnn++;
+						if (ctnn == 1)
 						{
 							if (male.size() > 0)
-							{
-								if (female.size() > 0)
-								{
-									SpawnSpecificSnake(male.at(0)); // - working (idk Its sometimes workings, sometimes not ://
-									//SpawnSpecificSnake(male.at(0).MixNetworks(female.at(0)));
-								}
-								else
-								{
-									SpawnSpecificSnake(male.at(0));
-								}
-							}
+								SpawnSpecificSnake(male.at(0));
 							else
-							{
-								//std::cout << "XD?!" << std::endl;
 								SpawnSnake();
-							}
 						}
-						else
+						if (ctnn == 2 ||  ctnn == 3)
 						{
-							//SpawnSpecificSnake(female.at(0));
 							if (bestNetwork.size() > 0)
 								SpawnSpecificSnake(bestNetwork.at(0));
-							SpawnSnake();
-							
+							else
+								SpawnSnake();
 						}
+						if (ctnn == 4)
+						{
+							SpawnSnake();
+							ctnn = 0;
+						}
+						//if (snak % 2 == 0)
+						//{
+						//	if (male.size() > 0)
+						//	{
+						//		if (female.size() > 0)
+						//		{
+						//			SpawnSpecificSnake(male.at(0)); // - working (idk Its sometimes working, sometimes not ://
+						//			//SpawnSpecificSnake(male.at(0).MixNetworks(female.at(0)));
+						//		}
+						//		else
+						//		{
+						//			SpawnSpecificSnake(male.at(0));
+						//		}
+						//	}
+						//	else
+						//	{
+						//		//std::cout << "XD?!" << std::endl;
+						//		SpawnSnake();
+						//	}
+						//}
+						//else
+						//{
+						//	//SpawnSpecificSnake(female.at(0));
+						//	if (bestNetwork.size() > 0)
+						//		SpawnSpecificSnake(bestNetwork.at(0));
+						//	SpawnSnake();
+						//	
+						//}
 					}
-					for (int snak = 0; snak < 10; snak++)
+					/*for (int snak = 0; snak < 10; snak++)
 					{
 						SpawnSnake();
 						if (bestNetwork.size()>0)
 							SpawnSpecificSnake(bestNetwork.at(0));
-					}
+					}*/
 				
 				}
 
@@ -457,9 +478,9 @@ public:
 
 		Net dNet = snakes.at(id).getNN();
 
-		float radiusC = 10.f;
-		float xDist = 50; int xFac = 175;
-		float yDist = 0; int yFac = 50;
+		float radiusC = blockSize/3;
+		float xDist = SCREEN_WIDTH/32; int xFac = SCREEN_WIDTH/9;
+		float yDist = 0; int yFac = SCREEN_HEIGHT/20;
 
 		float maxY = 0;	float minX = xDist-radiusC*2;
 		float maxX = gridX;	float minY = 1000;
@@ -479,11 +500,13 @@ public:
 		
 		dNet.getResult(results);
 		unsigned IndexRes = 0;
+		double maxyTempRes = 0;
 
-		for (unsigned i = 0; i < results.size()-1; i++)
+		for (int i = 0; i < results.size(); i++)
 		{
-			if (results.at(i) < results.at(i + 1))
+			if (maxyTempRes >= results.at(i))
 			{
+				maxyTempRes = results.at(i);
 				IndexRes = i;
 			}
 		}
@@ -551,14 +574,14 @@ public:
 				}
 				circ.setPosition(handler.at(i).at(j));
 				
-				int c = std::abs((dNet.m_layers.at(i).at(j).getOutputVal()+.5) * 127.5);
+				int c = 255 - ((dNet.m_layers.at(i).at(j).getOutputVal()+1.f) * 127.5);
 
 				circ.setFillColor(sf::Color(c,c,c));
 				
 				if (i == handler.size() - 1 && j == IndexRes)
 				{
-					/*circ.setOutlineColor(sf::Color(222, 255, 36));
-					circ.setOutlineThickness(circ.getRadius() / 2);*/
+					circ.setOutlineColor(sf::Color(222, 255, 36));
+					circ.setOutlineThickness(circ.getRadius() / 2);
 					window->draw(circ);
 
 					circ.setOutlineColor(sf::Color::White);
