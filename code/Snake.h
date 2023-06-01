@@ -158,7 +158,7 @@ public:
 
 	bool canChangeVelX(int dir)
 	{
-		if (vel.x != 0 )
+		if (vel.x != 0 || vel.x == dir)
 		{
 			//if (dir==vel.x)
 			//	return false;
@@ -172,7 +172,7 @@ public:
 
 	bool canChangeVelY(int dir)
 	{
-		if (vel.y != 0)
+		if (vel.y != 0 || vel.y == dir)
 		{
 			//if (dir == vel.y)
 				//return false;
@@ -549,8 +549,6 @@ public:
 			think(apples.at(0).getPos().x, apples.at(0).getPos().y);
 		}
 
-
-		//fitness += 1;
 		moves++;
 
 		if (segmentSize() == 2)
@@ -616,16 +614,18 @@ public:
 			movesLeftAmount = movesLeftAmountHolder;
 		else if (segmentSize() < 15)
 			movesLeftAmount = movesLeftAmountHolder * 3;
-		else if (segmentSize() < 20)
+		else if (segmentSize() < 25)
 			movesLeftAmount = movesLeftAmountHolder * 5;
 
 		else
 		{
-			movesLeftAmount = movesLeftAmountHolder * 7;
+			movesLeftAmount = movesLeftAmountHolder * segmentSize();
 		}
 		*/
 
-		movesLeftAmount = segmentSize() * 10 + movesLeftAmountHolder;
+		//movesLeftAmount = segmentSize() * 10 + movesLeftAmountHolder;
+
+		movesLeftAmount = segmentSize() * movesLeftAmountHolder;
 
 		movesLeft = movesLeftAmount;
 	}
