@@ -103,7 +103,7 @@ double Neuron::alpha = 0.5;
 
 double Neuron::activationFunction(double x)
 {
-	//std::cout << x << "\n";
+	//return (1 / 1 + std::exp(-x));
 	return std::tanh(x);
 }
 
