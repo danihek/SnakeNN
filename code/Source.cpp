@@ -18,14 +18,14 @@ int main()
 {
 	int cols=30;
 	int rows=30;
-	//std::cout << "screen width: \n"; std::cin >> SCREEN_WIDTH;
-	//std::cout << "screen height: \n"; std::cin >> SCREEN_HEIGHT;
+	//std::cout << "screen width(1600): \n"; std::cin >> SCREEN_WIDTH;
+	//std::cout << "screen height(1600): \n"; std::cin >> SCREEN_HEIGHT;
 	//std::cout << "screen blockSize(px): \n"; std::cin >> blockSize;
 	//
-	//std::cout << "screen rows: \n"; std::cin >> rows;
-	//std::cout << "screen cols: \n"; std::cin >> cols;
+	//std::cout << "screen rows(30): \n"; std::cin >> rows;
+	//std::cout << "screen cols(30): \n"; std::cin >> cols;
 
-	std::cout << "player or ai? (0-1): \n"; std::cin >> isAiplaying;
+	//std::cout << "player or ai? (0-1): \n"; std::cin >> isAiplaying;
 	if (isAiplaying)
 	{
 		std::cout << "Population size(100-500 recommended): \n"; std::cin >> POPULATION;
@@ -34,7 +34,7 @@ int main()
 		if (loadModel)
 		{
 			std::cout << "model filename: \n"; std::cin >> modelFilename;
-			//std::cout << "evolve | show ? (0-1): \n"; std::cin >> evolveOrShow;
+			std::cout << "evolve | show ? (0-1): \n"; std::cin >> evolveOrShow;
 		}
 	}
 
