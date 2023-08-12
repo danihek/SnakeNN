@@ -1,5 +1,5 @@
 //   main.cpp
-//   credits to Daniel Krywult / danihek - MIT License 
+//   created by danihek
 //   source: https://github.com/danihek07/SnakeNN
 //	 
 //   Training neural network to solve the best way to play Snake
