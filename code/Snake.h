@@ -63,9 +63,13 @@ public:
 		int g = rrandomnumber(0, 255);
 		int b = rrandomnumber(0, 255);
 		color = sf::Color(r, g, b);
-
-		vel.x = 0;
+		if (isAi)
+			vel.x = 1;
+		else
+			vel.x = 1;
 		vel.y = 0;
+
+		lPos = sf::Vector2i(2137, 2137);
 
 		rows = _rows;
 		cols = _cols;
@@ -111,16 +115,22 @@ public:
 		
 		apples.push_back(Apple(tX, tY));
 	}
-
 	void MutateCreature()
 	{
 		if (mutateMutations)
 		{
-			//mutationAmount = // / 100;
+			mutationAmount += generateRandomFloat(-1.0f, 1.0f); // 100;
+			mutationChance += generateRandomFloat(-1.0f, 1.0f); // 100;
 		}
-		mutationChance = generateRandomFloat(0.01, 1)/100;;//generateRandomFloat(0.001f, 1.0f)// / 100;
 
-		nn.at(0).mutate(mutationChance);// , mutationAmount);
+		//std::cout << mutationAmount << std::endl;
+
+		//mutationAmount = std::max(mutationAmount, float(0));
+
+		//mutationChance = std::max(mutationChance, float(0));
+
+		//nn.at(0).MutateNetwork(mutationAmount, mutationChance);
+		nn.at(0).mutate(mutationAmount, mutationChance);
 
 		mutateMutations = false;
 	}
@@ -194,6 +204,61 @@ public:
 	{
 		vel.x = 0;
 		vel.y = direction;
+	}
+
+	void turnLeft()
+	{
+		//x
+		if (vel.x == -1)
+		{
+			vel.x = 0;
+			vel.y = 1;
+		}else
+		if (vel.x == 1)
+		{
+			vel.x = 0;
+			vel.y = -1;
+		}else
+		//y
+		if (vel.y == -1)
+		{
+			vel.x = -1;
+			vel.y = 0;
+		}else
+		if (vel.y == 1)
+		{
+			vel.x = 1;
+			vel.y = 0;
+		}
+	}
+
+	void turnRight()
+	{
+		//x
+		if (vel.x == 1)
+		{
+			vel.x = 0;
+			vel.y = 1;
+		}
+		else
+		if (vel.x == -1)
+		{
+			vel.x = 0;
+			vel.y = -1;
+		}
+		else
+		//y
+		if (vel.y == 1)
+		{
+			vel.x = -1;
+			vel.y = 0;
+		}
+		else
+		if (vel.y == -1)
+		{
+			vel.x = 1;
+			vel.y = 0;
+		}
 	}
 
 	bool isAlive_()
@@ -338,7 +403,7 @@ public:
 					sw1 = false;
 				}
 			}*/
-
+			
 		}
 
 		//inputs->at(6) = (1 / distance(segment.at(0).x, segment.at(0).y, apples.at(0).getPos().x, apples.at(0).getPos().y));
@@ -351,15 +416,11 @@ public:
 
 		for (int i = 0; i < 16; i ++)
 		{
-			inp.push_back(0.0f);
+			inp.push_back(0.0);
 		}
 		
 		inputSet(&inp);
-
-		bool n = true, e = n, s = n, w = n, nw = n, ne = n, se = n, sw = n;
-		bool n1 = true, e1 = n, s1 = n, w1 = n, nw1 = n, ne1 = n, se1 = n, sw1 = n;
-		bool n2 = true, e2 = n, s2 = n, w2 = n, nw2 = n, ne2 = n, se2 = n, sw2 = n;
-
+		
 		if (showInputVarS)
 		{
 			for (int i = 0; i < inp.size(); i++)
@@ -383,46 +444,38 @@ public:
 			}
 			std::cout << std::endl;
 		}
-		float maxy = 0;
+		
+		double maxi = 0.f;
 		int properIndex = 0;
-		int properIndex2 = 0;
-		/*for (int i = 0; i < nn.at(0).outSize(); i++)
+		
+		for (unsigned i = 0; i < outputs.size(); i++)
 		{
-			if (outputs.at(i) == outputsSorted.at(i))
+			if (maxi > outputs.at(i))
 			{
-				properIndex = i;
-			}
-		}*/
-		for (int i = 0; i < outputs.size(); i++)
-		{
-			if (maxy >= outputs.at(i))
-			{
-				maxy = outputs.at(i);
+				maxi = outputs.at(i);
 				properIndex = i;
 			}
 		}
+
+		//properIndex = RRRRandom::get().intInRange(0, 3);
 
 		//std::cout << properIndex << " " << properIndex2 << std::endl;
 
 		if (properIndex == 0)
 		{
-			//if (canChangeVelX(-1))
-				mVeritcal(-1);
+			mVeritcal(-1);
 		}
 		else if (properIndex == 1)
 		{
-			//if (canChangeVelX(1))
-				mVeritcal(1);
+			mVeritcal(1);
 		}
 		else if (properIndex == 2)
 		{
-			//if (canChangeVelY(-1))
-				mHorizontal(-1);
+			mHorizontal(-1);
 		}
 		else if (properIndex == 3)
 		{
-			//if (canChangeVelY(1))
-				mHorizontal(1);
+			mHorizontal(1);
 		}
 	}
 
@@ -551,11 +604,13 @@ public:
 
 		moves++;
 
+
+
 		if (segmentSize() == 2)
 		{
 			if (lastPositionsForExecute.at(0) == sf::Vector2i(segment.at(0).x + vel.x, segment.at(0).y + vel.y))
 			{
-				//isAlive = false;
+				isAlive = false;
 			}
 		}
 
@@ -569,9 +624,15 @@ public:
 			segment.at(i).x = segment.at(i - 1).x;
 			segment.at(i).y = segment.at(i - 1).y;
 		}
-
+		llPos = lPos;
+		
+		lPos = segment.at(0);
+		
 		segment.at(0).x += vel.x;
 		segment.at(0).y += vel.y;
+
+		if (llPos == segment.at(0))
+			setIsAlive(false);
 
 		calcFitness(); //working
 	}
@@ -605,7 +666,8 @@ public:
 		//fitness = moves * moves * std::pow(2, score);
 		//fitness = moves * pow(2,segmentSize());
 		//fitness = segmentSize();
-		fitness = segmentSize() * segmentSize() + moves;
+		 
+		fitness = pow(2,segmentSize()) * moves * moves;
 	}
 
 	void ResetMovesLeft()
@@ -625,7 +687,9 @@ public:
 
 		//movesLeftAmount = segmentSize() * 10 + movesLeftAmountHolder;
 
-		movesLeftAmount = segmentSize() * movesLeftAmountHolder;
+		//movesLeftAmount = segmentSize() * movesLeftAmountHolder;
+
+		movesLeftAmount = 50;
 
 		movesLeft = movesLeftAmount;
 	}
@@ -699,4 +763,6 @@ private:
 	std::vector<sf::Vector2i> lastPositionsForExecute;
 	
 	sf::Vector2i vel;
+	sf::Vector2i lPos;
+	sf::Vector2i llPos;
 };
