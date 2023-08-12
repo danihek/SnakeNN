@@ -33,11 +33,13 @@ HIDDEN LAYER - {8, 6}
 	}
 	
 OUTPUT LAYER - 4
-	
+	{
+ 
 		1 - suma wartosci poprzedniej warstwy pomnozonych przez wage ich polaczenia
 		2 - suma wartosci poprzedniej warstwy pomnozonych przez wage ich polaczenia
 		3 - suma wartosci poprzedniej warstwy pomnozonych przez wage ich polaczenia
-		4 - suma wartosci poprzedniej warstwy pomnozonych przez wage ich polaczenia// najwyzsza wartosc jest wybierana jako ruch snake
+		4 - suma wartosci poprzedniej warstwy pomnozonych przez wage ich polaczenia
+  		// najwyzsza wartosc jest wybierana jako ruch snake
 	}
 
 // --------------------------- Jak poprawnie odczytywac zapisane modele?
