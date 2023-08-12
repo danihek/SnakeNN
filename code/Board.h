@@ -4,8 +4,6 @@
 #include <random>
 #include <string>
 #include "Snake.h"
-//#include "Apple.h"
-//#include "NeuralNetwork.h"
 
 int SNAKESFACTOR = 2;
 
@@ -102,7 +100,9 @@ public:
 		
 		loadedModel.push_back(__net);
 
-		loadedModel.at(0).draw();
+		//loadedModel.at(0).draw();
+		
+		
 		//__net.saveNet("CEI2");
 		 //system("pause");
 
@@ -126,13 +126,26 @@ public:
 		{
 			if (ver)
 			{
-				//if (snakes.at(arr).canChangeVelX())
-					snakes.at(arr).mVeritcal(dir);
+				snakes.at(arr).mVeritcal(dir);
 			}
 			else
 			{
-				//if (snakes.at(arr).canChangeVelY())
-					snakes.at(arr).mHorizontal(dir);
+				snakes.at(arr).mHorizontal(dir);
+			}
+		}
+	}
+
+	void turnSnake(bool ver)
+	{
+		if (snakes.size() >= 1)
+		{
+			if (ver)
+			{
+				snakes.at(0).turnLeft();
+			}
+			else
+			{
+				snakes.at(0).turnRight();
 			}
 		}
 	}
@@ -157,26 +170,6 @@ public:
 			raycastState = false;
 		else
 			raycastState = true;
-	}
-
-	void SaveBestModel()
-	{
-		if (bestNetwork.size() > 0)
-		{
-			
-			//SaveNet(&bestNetwork.at(0), "models/model-" + std::to_string(generation) + "-" + std::to_string(int(lastBestFitness)));
-		}
-	}
-
-	void loadSpecificModel(std::string filename)
-	{
-		std::vector<unsigned> topology;
-
-		topology.push_back(16); // working = {16, 8, 6 ,4}
-		topology.push_back(8);
-		topology.push_back(6);
-		//male.push_back(topology);
-		//readNet(&male.at(0),filename);
 	}
 
 	void Update(bool slowUpdate, bool drawing)
@@ -267,31 +260,40 @@ public:
 		{
 			if (isAi)
 			{
-				std::vector<Net> male;
+				// GENERATIONS DOWN HERE
+				int bestSize = 0;
 				int bestIndex=-1;
+
+				unsigned sumFitness = 0;
+				unsigned avrFitness = 0;
+				
+				unsigned sumSize = 0;
+				double avrSize = 0;
+
+				std::vector<Net> male;
+
 				for (int snak = 0; snak < snakes.size(); snak++)
 				{
 					snakes.at(snak).turnInputOutputShowUp(false);
+
+					sumFitness += snakes.at(snak).getFitness();
+					sumSize += snakes.at(snak).segmentSize();
 
 					if (snakes.at(snak).getFitness() > lastBestFitness)
 					{
 						//bestIndex = snak;
 						//lastBestFitness = snakes.at(snak).getFitness();
-						if (male.size() <= 0)
-						{
-							male.push_back(snakes.at(snak).getNN());
-						}
-						else
-						{
-							female.clear();
-							female.push_back(male.at(0));
-
-							male.clear();
-							male.push_back(snakes.at(snak).getNN());
-						}
+						male.clear();
+						male.push_back(snakes.at(snak).getNN());
+						bestSize = snakes.at(snak).segmentSize();
 						lastBestFitness = snakes.at(snak).getFitness();
 					}
 				}
+
+				avrSize = (sumSize / double(snakes.size()));
+				avrFitness = sumFitness / snakes.size();
+
+
 
 				if (male.size() > 0 && lastBestFitness > FitnessPerGen)
 				{
@@ -305,104 +307,66 @@ public:
 				{
 					for (int snak = 0; snak < SNAKESFACTOR; snak++)
 					{
-						if (loadedModel.size() > 0)
-						{
-							if (evolveOrShowModel)
+						//if (loadedModel.size() > 0)
+						//{
+							if (snak % 2 == 0)
 							{
-								LoadSpawnSpecificSnake(loadedModel.at(0));
+								if (male.size() > 0)
+								{
+									LoadSpawnSpecificSnake(male.at(0)); 
+								}
+								else
+									LoadSpawnSpecificSnake(loadedModel.at(0));
 							}
 							else
 							{
-								if (snak % 2 == 0)
-								{
-									if (male.size() > 0)
-									{
-										LoadSpawnSpecificSnake(loadedModel.at(0)); 
-									}
-									else
-									{
-										SpawnSpecificSnake(male.at(0));
-										//SpawnSnake();
-									}
-								}
+								if (bestNetwork.size()>0)
+									SpawnSpecificSnake(bestNetwork.at(0));
 								else
-								{
-									if (bestNetwork.size()>0)
-										SpawnSpecificSnake(bestNetwork.at(0));
-									SpawnSnake();
-								}
+									LoadSpawnSpecificSnake(loadedModel.at(0));
 							}
-						}
+						//}
 					}
 				}
 				else
 				{
-					int ctnn = 0;
 					for (int snak = 0; snak < SNAKESFACTOR; snak++)
 					{
-						ctnn++;
-						if (ctnn == 1)
+						if (true)//snak % 2 == 0)
 						{
 							if (male.size() > 0)
+							{
 								SpawnSpecificSnake(male.at(0));
+								//SpawnSnake();
+							}
 							else
+							{
+								std::cout << "error: temp bestNetwork size is equal or less to 0\n";
 								SpawnSnake();
+							}
 						}
-						if (ctnn == 2 ||  ctnn == 3)
+						else
 						{
 							if (bestNetwork.size() > 0)
+							{
 								SpawnSpecificSnake(bestNetwork.at(0));
+							}
 							else
+							{
+								std::cout << "error: bestNetwork size is equal or less to 0\n";
 								SpawnSnake();
+							}
 						}
-						if (ctnn == 4)
-						{
-							SpawnSnake();
-							ctnn = 0;
-						}
-						//if (snak % 2 == 0)
-						//{
-						//	if (male.size() > 0)
-						//	{
-						//		if (female.size() > 0)
-						//		{
-						//			SpawnSpecificSnake(male.at(0)); // - working (idk Its sometimes working, sometimes not ://
-						//			//SpawnSpecificSnake(male.at(0).MixNetworks(female.at(0)));
-						//		}
-						//		else
-						//		{
-						//			SpawnSpecificSnake(male.at(0));
-						//		}
-						//	}
-						//	else
-						//	{
-						//		//std::cout << "XD?!" << std::endl;
-						//		SpawnSnake();
-						//	}
-						//}
-						//else
-						//{
-						//	//SpawnSpecificSnake(female.at(0));
-						//	if (bestNetwork.size() > 0)
-						//		SpawnSpecificSnake(bestNetwork.at(0));
-						//	SpawnSnake();
-						//	
-						//}
+						//SpawnSnake();
 					}
-					/*for (int snak = 0; snak < 10; snak++)
-					{
-						SpawnSnake();
-						if (bestNetwork.size()>0)
-							SpawnSpecificSnake(bestNetwork.at(0));
-					}*/
-				
 				}
 
 				if (lastBestFitness > FitnessPerGen)
 					FitnessPerGen = lastBestFitness;
 
-				if (counterOfGenerations >= 20)
+				if (lastSaveNetFittness < FitnessPerGen)
 				{
+					lastSaveNetFittness = FitnessPerGen;
 					counterOfGenerations = 0;
 					if (bestNetwork.size() > 0)
 					bestNetwork.at(0).saveNet(std::to_string(generation)
@@ -411,11 +375,17 @@ public:
 				}
 				
 				generation++;
-				std::cout << "Generation: " << generation << " | Current Best Score: " << lastBestFitness << 
-					" | Highest Score: " << FitnessPerGen <<std::endl;
+
+				if (bestSize > bestSizeOverGen)
+					bestSizeOverGen = bestSize;
+				std::cout << "Generation: " << generation << " | C. Best Score: " << lastBestFitness << 
+					" | H. Score: " << FitnessPerGen << " | C. Best Size: " << bestSize << " | H. Size: " << bestSizeOverGen << 
+					" | avr.Fitness:: " << avrFitness <<  " | avr.Size:: " << avrSize << std::endl;
 				counterOfGenerations++;
 				lastBestFitness = 0.0f;
 				lastHighestIndex = 0;
+
+				//system("pause");
 
 			}
 			else
@@ -468,7 +438,7 @@ public:
 			apples.erase(apples.begin() + er);
 	}
 
-	void drawNet(sf::RenderWindow* window, int id)
+	void drawNet(sf::RenderWindow* window, int id, float scale)
 	{
 		//int gridX = SCREEN_WIDTH / 2 - (rows * blockSize) / 2;
 		sf::Text txt("ID: " + std::to_string(id),font,35);
@@ -478,12 +448,12 @@ public:
 
 		Net dNet = snakes.at(id).getNN();
 
-		float radiusC = blockSize/3;
-		float xDist = SCREEN_WIDTH/32; int xFac = SCREEN_WIDTH/9;
-		float yDist = 0; int yFac = SCREEN_HEIGHT/20;
+		float radiusC = (blockSize / 3) * scale;
+		float xDist = (SCREEN_WIDTH / 32) * scale; int xFac = (SCREEN_WIDTH / 12) * scale;
+		float yDist = 0; int yFac = (SCREEN_HEIGHT/25)*scale;
 
-		float maxY = 0;	float minX = xDist-radiusC*2;
-		float maxX = gridX;	float minY = 1000;
+		float maxY = 0;	float minX = (xDist - radiusC * 2) * scale;
+		float maxX = gridX;	float minY = 1000*scale;
 		sf::Color circColor = sf::Color::Blue;
 		sf::Color circBColor = sf::Color::Yellow;
 		
@@ -491,7 +461,7 @@ public:
 		circ.setFillColor(sf::Color::Blue);
 		circ.setOrigin(circ.getRadius(), circ.getRadius());
 		circ.setOutlineColor(sf::Color::White);
-		circ.setOutlineThickness(circ.getRadius() / 10);
+		circ.setOutlineThickness((circ.getRadius() / 10)*scale);
 
 		sf::RectangleShape bg;
 
@@ -512,20 +482,20 @@ public:
 		}
 
 
+
 		for (unsigned i = 0; i < dNet.m_layers.size(); i++)
 		{
 			std::vector<sf::Vector2f> t;
 			handler.push_back(t);
 			for (unsigned j = 0; j < dNet.m_layers.at(i).size()-1; j++)
 			{
-				handler.at(i).push_back(sf::Vector2f(xDist, gridY - dNet.m_layers.at(i).size() * radiusC + yDist));
-
 				yDist += yFac;
 				if (maxY < yDist)
 					maxY = yDist;
 
-				if (minY > yDist)
-					minY = yDist;
+				
+				handler.at(i).push_back(sf::Vector2f(xDist, gridY - dNet.m_layers.at(i).size() * radiusC + yDist));
+
 			}
 			if (i + 1 < dNet.m_layers.size())
 			{
@@ -538,16 +508,16 @@ public:
 
 		bg.setSize(sf::Vector2f(xDist,maxY));
 		bg.setPosition(sf::Vector2f(minX, minY));
-		bg.setOutlineColor(sf::Color::Black);
+		bg.setOutlineColor(sf::Color::White);
 		bg.setOutlineThickness(2);
 		bg.setFillColor(sf::Color(112, 113, 115));
-		window->draw(bg);
+		//window->draw(bg);
 
 		txt.setCharacterSize(30);
 		txt.setStyle(sf::Text::Bold);
 		float idPlacement = txt.findCharacterPos(txt.getString().getSize() - 1).x - txt.findCharacterPos(0).x;
 		txt.setPosition(maxX-50-idPlacement, minY + txt.getCharacterSize() - 5);
-		txt.setFillColor(sf::Color(16, 17, 20));
+		txt.setFillColor(sf::Color::White);
 		window->draw(txt);
 
 
@@ -626,7 +596,7 @@ public:
 		int tX = randomnumber(2, rows - 2);
 		int tY = randomnumber(2, cols - 2);
 		snakes.push_back(Snake(tX, tY, rows, cols, _NN, isAi));
-		//snakes.back().MutateCreature();
+		snakes.back().MutateCreature();
 	}
 
 	void showBrain()
@@ -637,7 +607,7 @@ public:
 			brainShowin = true;
 	}
 
-	void draw(sf::RenderWindow* window, bool stateofNumbers)
+	void draw(sf::RenderWindow* window, bool stateofNumbers, float scale)
 	{
 		___stateOfNumbers = stateofNumbers;
 		int gridX;
@@ -855,7 +825,7 @@ public:
 		}
 
 		if (brainShowin)
-			drawNet(window,tempIndex);
+			drawNet(window,tempIndex,scale);
 	}
 
 	bool checkFitness(double f)
@@ -890,11 +860,13 @@ private:
 	int lastHighestIndex = 0;
 	int generation = 0;
 	int counterOfGenerations = 0;
+	int lastSaveNetFittness = 0;
 	int rows;
 	int cols;
 	int SCREEN_WIDTH;
 	int SCREEN_HEIGHT;
 	int blockSize;
+	int bestSizeOverGen = 0;
 
 	std::vector<Snake> bestPerGen;
 	std::vector<Net> female;
@@ -902,5 +874,4 @@ private:
 	std::vector<Net> loadedModel;
 	std::vector<Snake> snakes;
 	std::vector<Apple> apples;
-	//std::vector<NeuralNetwork> net;
 };
