@@ -27,13 +27,13 @@ INPUT LAYER - 16
 	
 HIDDEN LAYER - {8, 6}
 	{
-		8 - suma wartosci wszystkich 16 inputow pomnozonych przez wage ich polaczenia
 		
+		8 - suma wartosci wszystkich 16 inputow pomnozonych przez wage ich polaczenia
 		6 - suma wartosci poprzedniej warstwy pomnozonych przez wage ich polaczenia
 	}
 	
 OUTPUT LAYER - 4
-	{
+	
 		1 - suma wartosci poprzedniej warstwy pomnozonych przez wage ich polaczenia
 		2 - suma wartosci poprzedniej warstwy pomnozonych przez wage ich polaczenia
 		3 - suma wartosci poprzedniej warstwy pomnozonych przez wage ich polaczenia
