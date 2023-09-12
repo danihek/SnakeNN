@@ -7,27 +7,6 @@
 
 int SNAKESFACTOR = 2;
 
-void bubbleSort(float* arr[], int n)
-{
-	bool swapped;
-	for (int i = 0; i < n - 1; i++)
-	{
-		swapped = false;
-		for (int j = 0; j < n - i - 1; j++)
-		{
-			if (arr[j] > arr[j + 1])
-			{
-				float temp = *arr[j];
-				arr[j] = arr[j + 1];
-				*arr[j + 1] = temp;
-				swapped = true;
-			}
-		}
-		if (swapped == false)
-			break;
-	}
-}
-
 int randomnumber(int mini, int maxi)
 {
 	return rand() % (maxi - mini + 1) + mini;
@@ -68,19 +47,12 @@ public:
 				{
 					//SpawnSnake();
 				}
-				
-				//snakes.at(i).MutateCreature();
 			}
 		}
 		else
 		{
 			SpawnSnake();
-			//SpawnApple();
 		}
-
-		//net.at(0).printWeights();
-		//net.at(0).printBiases();
-		//system("pause");
 	}
 
 	~Board()
@@ -99,14 +71,6 @@ public:
 		Net __net = readNet(currentModelFilename, topology);
 		
 		loadedModel.push_back(__net);
-
-		//loadedModel.at(0).draw();
-		
-		
-		//__net.saveNet("CEI2");
-		 //system("pause");
-
-		 //loadedModel.at(0).saveNet("CEI3");
 
 		for (int i = 0; i < SNAKESFACTOR; i++)
 		{
@@ -193,11 +157,6 @@ public:
 
 			for (int snak = 0; snak < snakes.size(); snak++)
 			{
-				//if (snakes.at(snak).Mutated())
-				//{
-					//snakes.at(snak).MutateCreature();
-				//}
-
 				if (snakes.at(snak).getFitness() > FitnessPerGen)
 					FitnessPerGen = snakes.at(snak).getFitness();
 
@@ -210,9 +169,6 @@ public:
 					if (snakes.at(snak).getPos(0).x < 0 || snakes.at(snak).getPos(0).x >= rows || snakes.at(snak).getPos(0).y < 0 || snakes.at(snak).getPos(0).y >= cols)
 					{
 						snakes.at(snak).setIsAlive(false);
-						//eraseSnake(snak);
-						//applesErase(snak);
-						//return;
 					}
 					else
 					{
@@ -220,9 +176,7 @@ public:
 						{
 							if (snakes.at(snak).getPos(0) == snakes.at(snak).getPos(i))
 							{
-								snakes.at(snak).setIsAlive(false); //importante
-								//eraseSnake(snak);
-								//applesErase(snak); --- error fucking destroyer
+								snakes.at(snak).setIsAlive(false);
 								canGoFurther = false;
 							}
 						}
@@ -232,27 +186,20 @@ public:
 					{
 						if (snakes.at(snak).getPos(0) == snakes.at(snak).applePos()) /// remeber!!!
 						{
-							//applesErase(snak);
-
 							snakes.at(snak).SpawnApple();
 
 							if (isAi)
 							{
-								//SpawnAppleInElement(snak);
 								snakes.at(snak).addScore(10);
-								//SpawnSpecificSnake(snakes.at(snak).getNN());
 
 							}
 							else
 							{
-								//SpawnApple();
+
 							}
 							snakes.at(snak).AddSegment();
-
 						}
 					}
-
-
 				}
 			}
 		}
@@ -281,8 +228,6 @@ public:
 
 					if (snakes.at(snak).getFitness() > lastBestFitness)
 					{
-						//bestIndex = snak;
-						//lastBestFitness = snakes.at(snak).getFitness();
 						male.clear();
 						male.push_back(snakes.at(snak).getNN());
 						bestSize = snakes.at(snak).segmentSize();
@@ -292,8 +237,6 @@ public:
 
 				avrSize = (sumSize / double(snakes.size()));
 				avrFitness = sumFitness / snakes.size();
-
-
 
 				if (male.size() > 0 && lastBestFitness > FitnessPerGen)
 				{
@@ -307,8 +250,6 @@ public:
 				{
 					for (int snak = 0; snak < SNAKESFACTOR; snak++)
 					{
-						//if (loadedModel.size() > 0)
-						//{
 							if (snak % 2 == 0)
 							{
 								if (male.size() > 0)
@@ -325,7 +266,6 @@ public:
 								else
 									LoadSpawnSpecificSnake(loadedModel.at(0));
 							}
-						//}
 					}
 				}
 				else
@@ -337,7 +277,6 @@ public:
 							if (male.size() > 0)
 							{
 								SpawnSpecificSnake(male.at(0));
-								//SpawnSnake();
 							}
 							else
 							{
@@ -357,7 +296,6 @@ public:
 								SpawnSnake();
 							}
 						}
-						//SpawnSnake();
 					}
 				}
 
@@ -384,9 +322,6 @@ public:
 				counterOfGenerations++;
 				lastBestFitness = 0.0f;
 				lastHighestIndex = 0;
-
-				//system("pause");
-
 			}
 			else
 			{
@@ -398,12 +333,8 @@ public:
 	}
 	void SpawnApple()
 	{
-		/*if(apples.size()>0)
-			apples.erase(apples.begin());*/
-
 		int tX = randomnumber(1, rows - 1);
 		int tY = randomnumber(1, cols - 1);
-
 		apples.push_back(Apple(tX, tY));
 	}
 
@@ -440,7 +371,6 @@ public:
 
 	void drawNet(sf::RenderWindow* window, int id, float scale)
 	{
-		//int gridX = SCREEN_WIDTH / 2 - (rows * blockSize) / 2;
 		sf::Text txt("ID: " + std::to_string(id),font,35);
 
 		int gridY = SCREEN_HEIGHT / 4;
@@ -481,8 +411,6 @@ public:
 			}
 		}
 
-
-
 		for (unsigned i = 0; i < dNet.m_layers.size(); i++)
 		{
 			std::vector<sf::Vector2f> t;
@@ -492,10 +420,8 @@ public:
 				yDist += yFac;
 				if (maxY < yDist)
 					maxY = yDist;
-
 				
 				handler.at(i).push_back(sf::Vector2f(xDist, gridY - dNet.m_layers.at(i).size() * radiusC + yDist));
-
 			}
 			if (i + 1 < dNet.m_layers.size())
 			{
@@ -511,7 +437,6 @@ public:
 		bg.setOutlineColor(sf::Color::White);
 		bg.setOutlineThickness(2);
 		bg.setFillColor(sf::Color(112, 113, 115));
-		//window->draw(bg);
 
 		txt.setCharacterSize(30);
 		txt.setStyle(sf::Text::Bold);
@@ -519,7 +444,6 @@ public:
 		txt.setPosition(maxX-50-idPlacement, minY + txt.getCharacterSize() - 5);
 		txt.setFillColor(sf::Color::White);
 		window->draw(txt);
-
 
 		for (unsigned i = 0; i < handler.size(); i++)
 		{
@@ -533,8 +457,6 @@ public:
 
 						sf::Vertex line[] =
 						{
-							//sf::Vertex(handler.at(i).at(j),sf::Color(n,n,100)),
-							//sf::Vertex(handler.at(i + 1).at(we),sf::Color(100,n,n))
 							sf::Vertex(handler.at(i).at(j),sf::Color(n,n/2,n/2)),
 							sf::Vertex(handler.at(i + 1).at(we),sf::Color(255,n,n))
 						};
@@ -565,12 +487,8 @@ public:
 		}
 	}
 
-
-
 	void SpawnSnake()
 	{
-		//int ar[] = { 4, 2 ,4 };
-		//int arSize = sizeof(ar) / sizeof(ar[0]);
 		std::vector<unsigned> topology;
 
 		topology.push_back(16); // working = {16, 8, 6 ,4}
@@ -649,7 +567,6 @@ public:
 		window->draw(background);
 
 		//map
-
 		sf::RectangleShape tCell(sf::Vector2f(blockSize, blockSize));
 		for (int r = 0; r < rows; r++)
 		{
@@ -719,25 +636,17 @@ public:
 					for (int i = 0; i < snakes.at(snak).segmentSize(); i++)
 					{
 						snakeShape.setPosition(gridX + snakes.at(snak).getPos(i).x * blockSize, gridY + snakes.at(snak).getPos(i).y * blockSize);
-						//snakeShape.setFillColor(sf::Color::Black);
-						//if (snak != 0)
-						//{
-							snakeShape.setFillColor(snakes.at(snak).getColor());
-					//	}
+						snakeShape.setFillColor(snakes.at(snak).getColor());
 						snakeShape.setOutlineThickness(2);//blockSize / 50);
 						snakeShape.setOutlineColor(sf::Color::Green);
 						window->draw(snakeShape);
 
-
 						if (raycastState)//raycasts
 						{
 							std::vector<sf::Vector2f> v1 = snakes.at(snak).linePos();
-							//std::cout << v1.size() << std::endl;
-
+							
 							for (int y = 0; y < v1.size(); y += 2)
 							{
-								//std::cout << v1.at(0).x << " " << v1.at(0).y << " | " << v1.at(1).x << " " << v1.at(1).y << std::endl;
-
 								v1.at(y).x = gridX + (v1.at(y).x * blockSize);
 								v1.at(y).y = gridY + (v1.at(y).y * blockSize);
 
@@ -764,24 +673,16 @@ public:
 				for (int i = 0; i < snakes.at(tempIndex).segmentSize(); i++)
 				{
 					snakeShape.setPosition(gridX + snakes.at(tempIndex).getPos(i).x * blockSize, gridY + snakes.at(tempIndex).getPos(i).y * blockSize);
-					//snakeShape.setFillColor(sf::Color::Black);
-					//if (snak != 0)
-					//{
-
-						snakeShape.setFillColor(snakes.at(tempIndex).getColor());
-					//}
+					snakeShape.setFillColor(snakes.at(tempIndex).getColor());
 					snakeShape.setOutlineThickness(2);//blockSize / 50);
 					snakeShape.setOutlineColor(sf::Color::Green);
 					window->draw(snakeShape);
 					if (raycastState)//raycasts
 					{
 						std::vector<sf::Vector2f> v1 = snakes.at(tempIndex).linePos();
-						//std::cout << v1.size() << std::endl;
 
 						for (int y = 0; y < v1.size(); y += 2)
 						{
-							//std::cout << v1.at(0).x << " " << v1.at(0).y << " | " << v1.at(1).x << " " << v1.at(1).y << std::endl;
-
 							v1.at(y).x = gridX + (v1.at(y).x * blockSize);
 							v1.at(y).y = gridY + (v1.at(y).y * blockSize);
 
