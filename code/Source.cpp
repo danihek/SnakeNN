@@ -1,5 +1,5 @@
 //   main.cpp
-//   created by danihek
+//   credits to Daniel Krywult / danihek - MIT License 
 //   source: https://github.com/danihek07/SnakeNN
 //	 
 //   Training neural network to solve the best way to play Snake
@@ -23,11 +23,9 @@
 
 #include <SFML/Graphics.hpp>
 #include <sstream>
-#include<iostream>
+#include <iostream>
 #include <ctime>
-#include <Windows.h>
 #include <cstdlib>
-#include <WinUser.h>
 #include <ctime>
 #include <string>
 #include <algorithm>
@@ -35,23 +33,34 @@
 #include <vector>
 #include "Board.h"
 
+//5720-362989568 name of best model
+
 int SCREEN_WIDTH = 1600;
 int SCREEN_HEIGHT = 1200;
 int blockSize = 30;
 int POPULATION = 300;
+int cols=30;
+int rows=30;
+int timeStep = 100;
 
 bool isAiplaying = true;
-bool loadModel = false;
+bool loadModel = true;
 bool evolveOrShow = false;
+bool stateOfnumberthingstodraw = false;
+bool drawing = true;
+bool slowUpdate = true;
 
 std::string modelFilename="5720-362989568";
 
 int main()
 {
-	int cols=30;
-	int rows=30;
-	std::cout << "Population size(100-500 recommended): \n"; std::cin >> POPULATION;
-	std::cout << "screen width(1200): \n"; std::cin >> SCREEN_WIDTH;
+	sf::Event event;
+	sf::Clock clock;
+
+	float lasttime = clock.getElapsedTime().asMilliseconds();
+	float scale = 1;
+	//std::cout << "Population size(100-500 recommended): \n"; std::cin >> POPULATION;
+	/*std::cout << "screen width(1200): \n"; std::cin >> SCREEN_WIDTH;
 	std::cout << "screen height(1200): \n"; std::cin >> SCREEN_HEIGHT;
 	std::cout << "screen blockSize(px): \n"; std::cin >> blockSize;
 	
@@ -67,30 +76,16 @@ int main()
 		{
 			std::cout << "model filename: \n"; std::cin >> modelFilename;
 		}
-	}
-
-	sf::Event event;
-	sf::Clock clock;
-	bool stateOfnumberthingstodraw = false;
-	bool drawing = true;
+	}*/
 	
-	int timeStep = 100;
-	
-	float lasttime = clock.getElapsedTime().asMilliseconds();
-	float scale = 1;
-
-
 	Board board(rows, cols, SCREEN_WIDTH, SCREEN_HEIGHT, blockSize, POPULATION, isAiplaying, loadModel);
-	
-	
+
 	if (loadModel)
 	{
 		board.setModelFilename(modelFilename, evolveOrShow);
 		board.SetUpModels();
 	}
 	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Snake by danihek");
-	
-	bool slowUpdate = true;
 
 	while (window.isOpen())
 	{
@@ -199,3 +194,25 @@ int main()
 
 	return 0;
 }
+
+// wallpaper window version (for fun ignore it)
+
+// HWND get_wallpaper_window() {
+// 	HWND progman = FindWindow(L"ProgMan", NULL);
+// 	SendMessageTimeout(progman, 0x052C, 0, 0, SMTO_NORMAL, 1000, nullptr);
+// 	HWND wallpaper_hwnd = nullptr;
+// 	EnumWindows(EnumWindowsProc, (LPARAM)&wallpaper_hwnd);
+// 	return wallpaper_hwnd;
+// }
+
+// BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam) {
+// 	HWND p = FindWindowEx(hwnd, NULL, L"SHELLDLL_DefView", NULL);
+// 	HWND* ret = (HWND*)lParam;
+
+// 	if (p)
+// 	{
+// 		// Gets the WorkerW Window after the current one.
+// 		*ret = FindWindowEx(NULL, hwnd, L"WorkerW", NULL);
+// 	}
+// 	return true;
+// }
