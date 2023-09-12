@@ -8,7 +8,6 @@
 #include "Apple.h"
 #include "Thinking.h"
 
-
 int rrandomnumber(int mini, int maxi)
 {
 	return rand() % (maxi - mini + 1) + mini;
@@ -20,35 +19,6 @@ float generateRandomFloat(float min, float max)
 	std::mt19937 gen(rd());
 	std::uniform_real_distribution<float> dis(min, max);
 	return dis(gen);
-}
-
-void swap(double& a, double& b) {
-	double temp = a;
-	a = b;
-	b = temp;
-}
-
-int partition(std::vector<double>& arr, int low, int high) {
-	float pivot = arr[high];
-	int i = low - 1;
-
-	for (int j = low; j < high; j++) {
-		if (arr[j] <= pivot) {
-			i++;
-			swap(arr[i], arr[j]);
-		}
-	}
-
-	swap(arr[i + 1], arr[high]);
-	return i + 1;
-}
-
-void quickSort(std::vector<double>& arr, int low, int high) {
-	if (low < high) {
-		int pivotIndex = partition(arr, low, high);
-		quickSort(arr, low, pivotIndex - 1);
-		quickSort(arr, pivotIndex + 1, high);
-	}
 }
 
 class Snake
@@ -79,7 +49,6 @@ public:
 		nn.push_back(_nn);
 
 		SpawnApple();
-
 	}
 
 	~Snake()
@@ -112,9 +81,9 @@ public:
 				}
 			}
 		}
-		
 		apples.push_back(Apple(tX, tY));
 	}
+
 	void MutateCreature()
 	{
 		if (mutateMutations)
@@ -123,17 +92,32 @@ public:
 			mutationChance += generateRandomFloat(-1.0f, 1.0f); // 100;
 		}
 
-		//std::cout << mutationAmount << std::endl;
+		mutationAmount = std::max(mutationAmount, float(0));
 
-		//mutationAmount = std::max(mutationAmount, float(0));
+		mutationChance = std::max(mutationChance, float(0));
 
-		//mutationChance = std::max(mutationChance, float(0));
-
-		//nn.at(0).MutateNetwork(mutationAmount, mutationChance);
 		nn.at(0).mutate(mutationAmount, mutationChance);
 
 		mutateMutations = false;
 	}
+
+	//void MutateCreature()
+	//{
+	//	if (mutateMutations)
+	//	{
+	//		mutationAmount += generateRandomFloat(-1.0f, 1.0f) / 100;
+	//		mutationChance += generateRandomFloat(0.f, 1.0f) / 100;
+	//	}
+
+	//	mutationAmount = std::max(mutationAmount, float(0));
+
+	//	//mutationChance = std::max(mutationChance, float(0));
+
+	//	nn.at(0).mutate(mutationAmount, mutationChance);
+
+	//	mutateMutations = false;
+
+	//}
 
 	void SetNN(Net _nn)
 	{
@@ -143,17 +127,13 @@ public:
 
 	Net getNN()
 	{
-		//MutateCreature();
 		return nn.at(0);
 	}
 
 	Snake GetChild()
 	{
-		//MutateCreature();
-
 		return *this;
 	}
-
 
 	void AddSegment()
 	{
@@ -170,10 +150,6 @@ public:
 	{
 		if (vel.x != 0 || vel.x == dir)
 		{
-			//if (dir==vel.x)
-			//	return false;
-			//else
-			//	isAlive = false;
 			return false;
 		}
 		else
@@ -184,10 +160,6 @@ public:
 	{
 		if (vel.y != 0 || vel.y == dir)
 		{
-			//if (dir == vel.y)
-				//return false;
-			///else
-			//	isAlive = false;
 			return false;
 		}
 		else
@@ -275,14 +247,14 @@ public:
 	{
 		return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2) * 1.0);
 	}
-
 	
+	//spaghetti code ignore it pls
 	void inputSet(std::vector<double> *inputs)
 	{
 		bool n = true, e = n, s = n, w = n, nw = n, ne = n, se = n, sw = n;
 		bool n1 = true, e1 = n, s1 = n, w1 = n, nw1 = n, ne1 = n, se1 = n, sw1 = n;
 		bool n2 = true, e2 = n, s2 = n, w2 = n, nw2 = n, ne2 = n, se2 = n, sw2 = n;
-		//inputs.push_back(1 / distance(segment.at(0).x, segment.at(0).y, segment.at(0).x, segment.at(0).y)); -- template
+
 		inputs->at(0) = (1 / distance(0, segment.at(0).y, segment.at(0).x, segment.at(0).y));
 		inputs->at(1) = (1 / distance(segment.at(0).x, 0, segment.at(0).x, segment.at(0).y));
 		inputs->at(2) = (1 / distance(segment.at(0).x, segment.at(0).y, rows, segment.at(0).y));
@@ -457,10 +429,6 @@ public:
 			}
 		}
 
-		//properIndex = RRRRandom::get().intInRange(0, 3);
-
-		//std::cout << properIndex << " " << properIndex2 << std::endl;
-
 		if (properIndex == 0)
 		{
 			mVeritcal(-1);
@@ -479,7 +447,7 @@ public:
 		}
 	}
 
-
+	// #2 spaghetti -_-
 	std::vector<sf::Vector2f> linePos()
 	{
 		std::vector<sf::Vector2f> linepos;
@@ -491,8 +459,8 @@ public:
 			{
 				float distance = float(std::sqrt(float(float((std::abs(segment.at(0).x) - segment.at(0).x - r) * (std::abs(segment.at(0).x) - segment.at(0).x - r)) 
 					+ float((std::abs(segment.at(0).y) - segment.at(0).y - r) * (std::abs(segment.at(0).y) - segment.at(0).y - r)))));
-				//std::cout << "NW: " << distance / (rows*std::sqrt(2)) << std::endl;
-				
+
+
 				linepos.push_back(sf::Vector2f(segment.at(0).x, segment.at(0).y));
 				linepos.push_back(sf::Vector2f(segment.at(0).x - r, segment.at(0).y - r));
 
@@ -583,15 +551,11 @@ public:
 		return linepos;
 	}
 
-	void Update()//int appleX, int appleY)
+	void Update()
 	{
-		//showInputVarS = false;
-
 		if (isAi)
 			movesLeft--;
 		
-		
-
 		if (movesLeft <= 0 && isAi)
 		{
 			setIsAlive(false);
@@ -603,8 +567,6 @@ public:
 		}
 
 		moves++;
-
-
 
 		if (segmentSize() == 2)
 		{
@@ -635,6 +597,7 @@ public:
 			setIsAlive(false);
 
 		calcFitness(); //working
+		calculateFitness(); //idk
 	}
 
 	int segmentSize()
@@ -647,7 +610,8 @@ public:
 		return segment.at(i);
 	}
 
-	void calcFitness() {
+	void calcFitness()
+	{
 		//fitness is based on length and lifetime
 		if (segmentSize() < 10) {
 			fitness = floor(moves * moves * pow(2, (floor(segmentSize()))));
@@ -666,7 +630,6 @@ public:
 		//fitness = moves * moves * std::pow(2, score);
 		//fitness = moves * pow(2,segmentSize());
 		//fitness = segmentSize();
-		 
 		fitness = pow(2,segmentSize()) * moves * moves;
 	}
 
@@ -690,7 +653,6 @@ public:
 		//movesLeftAmount = segmentSize() * movesLeftAmountHolder;
 
 		movesLeftAmount = 50;
-
 		movesLeft = movesLeftAmount;
 	}
 
