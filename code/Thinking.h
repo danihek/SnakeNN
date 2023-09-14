@@ -59,11 +59,9 @@ float RRRRandom::floatInRange(float low, float high)
 struct Connection
 {
 	double weight;
-	double deltaWeight;
 };
 
 class Neuron;
-
 typedef std::vector<Neuron> Layer;
 
 class Neuron
@@ -74,8 +72,6 @@ class Neuron
 		void setOutputVal(double val) { m_outputVal = val; }
 		double getOutputVal(void) const { return m_outputVal; }
 		void feedForward(const Layer& prevLayer);
-		void calcHiddenGradients(const Layer& nextLayer);
-		void updateInputWeights(Layer& prevLayer);
 		void SetWeights(Neuron* nn);
 		void MutateLayer(float mutationChance, float mutationAmount);
 		void mutateW(float chance, float mag);
