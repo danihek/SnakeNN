@@ -12,8 +12,9 @@ The best progressing NN's are saved to file named with their fitness and generat
 Neural network is designed like this:
 
 16 - Input Layer ( Every update Snake (his head) is sending rays in 8 directions (like in compass: N, NE, E, SE, S.. etc.)
-	8 for walls/borders and 8 for food if ray is coliding with object like Food-Apple or border then it takes that distance to neuron with 1/distance.
-  	If ray sent for Food is not pointing for it Neuron Value is set to 0
+
+8 for walls/borders and 8 for food if ray is coliding with object like Food-Apple or border then it takes that distance to neuron with 1/distance.
+If ray sent for Food is not pointing for it Neuron Value is set to 0
 
   {  - Hidden Layer
 	8 - first with 8 neurons
