@@ -589,7 +589,7 @@ public:
 					+ std::to_string(generation) 
 					+ " | Alive: " + std::to_string(nbOfSnakesAlive()) 
 					+ " | Population: " + std::to_string(snakes.size()) + " | BestScore: " 
-					+ std::to_string(int(FitnessPerGen)) + " | CurrentSnake ID: " + std::to_string(tempIndex) 
+					+ std::to_string((FitnessPerGen)) + " | CurrentSnake ID: " + std::to_string(tempIndex) 
 					+ "| Size: " + std::to_string(snakes.at(tempIndex).segmentSize() - 1) 
 					+ "| Fitness: " + std::to_string(int(snakes.at(tempIndex).getFitness()))
 					+ "| LeftMoves: " + std::to_string(snakes.at(tempIndex).leftMovesNumber()) + "-" + std::to_string(snakes.at(tempIndex).MaxleftMovesNumber()),
@@ -606,7 +606,7 @@ public:
 					+ std::to_string(generation)
 					+ " | Alive: " + std::to_string(nbOfSnakesAlive())
 					+ " | Population: " + std::to_string(snakes.size()) + " | BestScore: "
-					+ std::to_string(int(FitnessPerGen)), font, 20);
+					+ std::to_string((FitnessPerGen)), font, 20);
 				numberOfPoints.setCharacterSize(15);
 				numberOfPoints.setStyle(sf::Text::Bold);
 				numberOfPoints.setPosition(10, 10);
@@ -743,8 +743,8 @@ public:
 	}
 
 private:
-	double FitnessPerGen = 0;
-	double lastBestFitness = 0;
+	unsigned FitnessPerGen = 0;
+	unsigned lastBestFitness = 0;
 
 	std::string currentModelFilename="";
 
