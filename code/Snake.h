@@ -677,7 +677,7 @@ public:
 		ResetMovesLeft();
 	}
 
-	double getFitness()
+	unsigned getFitness()
 	{
 		return fitness;
 	}
@@ -698,7 +698,7 @@ public:
 	}
 
 private:
-	double fitness=0;
+	unsigned fitness=0;
 	double score=0;
 
 	float mutationAmount = 0;
