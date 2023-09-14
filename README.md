@@ -1,110 +1,45 @@
-# SnakeNN - Trenowanie Sieci Neuronowej do gry Snake
-Discord - danihek#6538
+# SnakeNN - Neural Network Training for Snake Game
 
-// --------------------------- Tytul
-Projekt AI do gry Snake z uzyciem sieci neuronowych trenowanych algorytmem genetycznym(obecnie funckja crossover jest wylaczona, zamiast tego selfmutate) - wersja niedokonczona
+# 1. Project
 
-// Budowa sieci neuronowej - na ten czas nie mozna jej ustawic przy wlaczaniu i jest ustawiona w kodzie domyslnie
+Training neural network to solve the best way to play Snake
+using Genetic Algorithm. Program creates X (population) NN's, testing their performance
+in game and calculates score of each one using fitness function.
+NN with the best fitness value is mixed with second
+best NN and mutated X times to fill out population vector.
+The best progressing NN's are saved to file named with their fitness and generation.
 
-NN = {16, 8, 6 ,4}
+Neural network is designed like this:
 
-INPUT LAYER - 16
-	{
-		16 promieni (raycasty) wyprowadzone w 8 kierunkach(jak w kompasie) n,ne,e,se,s,sw,w,nw
-		
-		- pierwsze 8 jest wysylane dopoki nie trafi na sciane
-		
-		- drugie osiem jest wysylane dopoki nie trafi na jablko
-		
-		W przypadku natrafienia na obiekt jest obliczana odleglosc miedzy PIERWSZYM SEGMENTEM snake,
-		a obiektem i wprowadzona do inputu jako - "1/distance"
-		
-		
-		//W przyszlosci bedzie dodatkowe osiem inputow,
-		ktore wysyla kolejne osiem raycastow i sprawdza odleglosc pomiedzy "glowa" snake,
-		a reszta jego ciala, by nie zabijal sie o siebie
-	}
+16 - Input Layer ( Every update Snake (his head) is sending rays in 8 directions (like in compass: N, NE, E, SE, S.. etc.)
+	8 for walls/borders and 8 for food if ray is coliding with object like Food-Apple or border then it takes that distance to neuron with 1/distance.
+  	If ray sent for Food is not pointing for it Neuron Value is set to 0
+
+  {  - Hidden Layer
+	8 - first with 8 neurons
+     	6 - second with 6 neurons
+  }
+
+4 - Output Layer (4 output neurons(move): left, right, up, down)
+
+
+# 2. Keybinds
+
+pattern = [key] - function
+
+[SPACE] - fast/slow simulation
+
+[0] and [9] - increasing and decreasing speed of simulation
+
+[Q] - no drawing
 	
-HIDDEN LAYER - {8, 6}
-	{
-		
-		8 - suma wartosci wszystkich 16 inputow pomnozonych przez wage ich polaczenia
-		6 - suma wartosci poprzedniej warstwy pomnozonych przez wage ich polaczenia
-	}
-	
-OUTPUT LAYER - 4
-	{
- 
-		1 - suma wartosci poprzedniej warstwy pomnozonych przez wage ich polaczenia
-		2 - suma wartosci poprzedniej warstwy pomnozonych przez wage ich polaczenia
-		3 - suma wartosci poprzedniej warstwy pomnozonych przez wage ich polaczenia
-		4 - suma wartosci poprzedniej warstwy pomnozonych przez wage ich polaczenia
-  		// najwyzsza wartosc jest wybierana jako ruch snake
-	}
+[R] - draw best snake/draw all snakes
 
-// --------------------------- Jak poprawnie odczytywac zapisane modele?
+[U] - show input and output of NN's (best ID) - only if [R] is activated 
 
-1180-27040000 - pierwsza czesc to liczba generacji = "1180"
-+ "-"
-druga czesc to najlepszy wynik konkretnego modelu  = "27040000" - im wyzszy wynik tym lepiej
+[T] - drawing raycasts on/off
 
-	-0.929735 // przykladowa zawartosc
-	-0.603564
-	0.341047
-	-0.339219
-	1.000000
-	0.794609
-	-0.105155
-	-1.000000
-	1.000000
-	1.000000
-	-0.491314
+[Y] - drawing neural network on/off
 
-// --------------------------- Jak uzywac?
-Po wlaczeniu aplikacji trzeba wpisac parametry startowe
-
-// zalecane dla trenowania
-screenwidth  - 1200
-screenheight - 1000
-
-screen blockSize(px) - 30
-
-screen rows - 30
-screen cols - 30
-
-player or ai? - 1
-Population size - 500
-trained model - 0
-
-// --------------------------- Przykladowe do odczytania juz wytrenowanego modelu 
-Aby wczytac wytrenowany model nalezy UPEWNIC SIE ze jest w folderze /models
-
-screenwidth  - 1200
-screenheight - 1000
-
-screen blockSize(px) - 30
-
-screen rows - 30
-screen cols - 30
-
-player or ai? - 1
-Population size - 500
-trained model - 1
-
-model filename - "modelname" - aktualnie najlepszy znajduje sie w folderze "models" pod nazwa "5720-362989568"
-
-//--------------------------- Sterowanie
-
-[przycisk na klawiaturze] - funkcja
-
-[SPACE] - szybka symulacja / wolna symulacja
-	[0] i [9] - sterowanie szybkoscia symulacji
-	[Q] - wylacza rysowanie
-	
-[R] - rysowanie wszystkich/jednego najlepszego snake
-	[U] - wyswietlenie inputu i outputu najlepszego snake w konsoli - tylko jezeli [R]
-[T] - rysowanie raycastow on/off
-[Y] - wizualizacja sieci neuronowej
-
-//Jezeli zostal wybrany tryb gracza, a nie AI - strzalki do sterowania
+//If game mode is set to player you can move snake with arrows
 
