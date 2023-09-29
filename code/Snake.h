@@ -652,7 +652,8 @@ public:
 
 		//movesLeftAmount = segmentSize() * movesLeftAmountHolder;
 
-		movesLeftAmount = 50;
+		//movesLeftAmount = 50; //OLD
+		movesLeftAmount += 20;
 		movesLeft = movesLeftAmount;
 	}
 
