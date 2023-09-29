@@ -69,6 +69,7 @@ int main()
 	std::cout << "screen cols(30): \n"; std::cin >> cols;
 	
 	std::cout << "player or ai? (0-1): \n"; std::cin >> isAiplaying;
+	
 	if (isAiplaying)
 	{
 		std::cout << "load already trained model? no-yes (0-1): \n"; std::cin >> loadModel;
@@ -195,25 +196,3 @@ int main()
 
 	return 0;
 }
-
-// wallpaper windows version (for fun ignore it)
-
-// HWND get_wallpaper_window() {
-// 	HWND progman = FindWindow(L"ProgMan", NULL);
-// 	SendMessageTimeout(progman, 0x052C, 0, 0, SMTO_NORMAL, 1000, nullptr);
-// 	HWND wallpaper_hwnd = nullptr;
-// 	EnumWindows(EnumWindowsProc, (LPARAM)&wallpaper_hwnd);
-// 	return wallpaper_hwnd;
-// }
-
-// BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam) {
-// 	HWND p = FindWindowEx(hwnd, NULL, L"SHELLDLL_DefView", NULL);
-// 	HWND* ret = (HWND*)lParam;
-
-// 	if (p)
-// 	{
-// 		// Gets the WorkerW Window after the current one.
-// 		*ret = FindWindowEx(NULL, hwnd, L"WorkerW", NULL);
-// 	}
-// 	return true;
-// }
