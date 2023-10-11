@@ -9,6 +9,8 @@ NN with the best fitness value is mixed with second
 best NN and mutated X times to fill out population vector.
 The best progressing NN's are saved to file named with their fitness and generation.
 
+![alt text](https://raw.githubusercontent.com/danihek07/SnakeNN/main/data/snakes.png)
+
 Neural network is designed like this:
 
 16 - Input Layer ( Every update Snake (his head) is sending rays in 8 directions (like in compass: N, NE, E, SE, S.. etc.)
