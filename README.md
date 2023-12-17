@@ -25,8 +25,13 @@ If ray sent for Food is not pointing for it Neuron Value is set to 0
 
 4 - Output Layer (4 output neurons(move): left, right, up, down)
 
+# 2. Build
 
-# 2. Keybinds
+
+
+
+
+# 3. Keybinds
 
 pattern = [key] - function
 
