@@ -1,5 +1,5 @@
 #include <iostream>
-#include <SFML/Graphics.hpp>
+#include "SFML-2.6.1/include/SFML/Graphics.hpp"
 #include <ctime>
 #include <random>
 #include <string>
