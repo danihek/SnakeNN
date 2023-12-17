@@ -27,13 +27,31 @@ If ray sent for Food is not pointing for it Neuron Value is set to 0
 
 # 2. Build
 
+1. Build dependencies to install via package manager:
+   - libsfml-dev
+   - cmake
+   - clang
+2. Build proccess
+
+Clone repository 
+```sh
+https://github.com/danihek07/SnakeNN
+```
+Navigate to it
+```sh
+cd SnakeNN
+```
+Use cmake
+```sh
+cmake .
+```
+Make executable with make
+```sh
+make
+```
 
 
-
-
-# 3. Keybinds
-
-pattern = [key] - function
+# 3. Keybinds in app environment
 
 [SPACE] - fast/slow simulation
 
@@ -43,11 +61,10 @@ pattern = [key] - function
 	
 [R] - draw best snake/draw all snakes
 
-[U] - show input and output of NN's (best ID) - only if [R] is activated 
+[U] - show input and output of best NN's
 
 [T] - drawing raycasts on/off
 
 [Y] - drawing neural network on/off
 
 //If game mode is set to player you can move snake with arrows
-
