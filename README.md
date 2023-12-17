@@ -35,7 +35,7 @@ If ray sent for Food is not pointing for it Neuron Value is set to 0
 
 Clone repository 
 ```sh
-https://github.com/danihek07/SnakeNN
+git clone https://github.com/danihek07/SnakeNN
 ```
 Navigate to it
 ```sh
