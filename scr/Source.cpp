@@ -23,7 +23,7 @@
 //  4 - Output Layer (4 output neurons: left, right, up, down)
 //
 
-#include "libs/SFML-2.6.1/include/SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 #include <sstream>
 #include <iostream>
 #include <ctime>
