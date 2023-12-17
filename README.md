@@ -45,7 +45,7 @@ Use cmake
 ```sh
 cmake .
 ```
-Make executable with make
+Create executable with make
 ```sh
 make
 ```
