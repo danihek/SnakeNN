@@ -27,11 +27,12 @@ If ray sent for Food is not pointing for it Neuron Value is set to 0
 
 # 2. Build
 
-1. Build dependencies to install via package manager:
+## Build dependencies to install via package manager:
    - libsfml-dev
    - cmake
    - clang
-2. Build proccess
+
+## Build proccess
 
 Clone repository 
 ```sh
