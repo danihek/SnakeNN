@@ -1,21 +1,20 @@
-name: C/C++ CI
-
+name: Playwright Tests
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main, master ]
   pull_request:
-    branches: [ "main" ]
-
+    branches: [ main, master ]
 jobs:
-  build:
-
+  install_and_make:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v3
-    -name: install libraries
-      run: apt-get install libsfml-dev
-    - name: cmake
+    - uses: actions/checkout@v4
+    - name: Install dependencies
+      run: sudo apt install libsfml-dev cmake clang
+    - name: Build
       run: cmake .
-    - name: make
+    - name: Cmake
+      run: cmake .
+    - name: Make
       run: make
+      
